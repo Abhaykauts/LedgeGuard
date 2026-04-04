@@ -1,0 +1,20 @@
+# Portable Go Distribution
+/go_dist/
+/tmp/
+
+# Go Binaries & Build artifacts
+bin/
+backend/bin/
+*.exe
+*.test
+*.prof
+
+# Dependencies
+# (We want to keep go.mod and go.sum, but not local vendor if we use it)
+vendor/
+
+# OS/IDE
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
