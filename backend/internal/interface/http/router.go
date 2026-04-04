@@ -7,8 +7,9 @@ import (
 
 // RouterConfig contains dependencies for the router
 type RouterConfig struct {
-	AuthHandler *AuthHandler
-	JWTSecret   string
+	AuthHandler   *AuthHandler
+	RecordHandler *RecordHandler
+	JWTSecret     string
 }
 
 // NewRouter sets up the API routes
@@ -19,10 +20,22 @@ func NewRouter(cfg RouterConfig) *gin.Engine {
 	api := r.Group("/api")
 	{
 		// Auth routes
-		auth := api.Group("/auth")
+		authGroup := api.Group("/auth")
 		{
-			auth.POST("/login", cfg.AuthHandler.Login)
-			auth.POST("/refresh", cfg.AuthHandler.Refresh)
+			authGroup.POST("/login", cfg.AuthHandler.Login)
+			authGroup.POST("/refresh", cfg.AuthHandler.Refresh)
+		}
+
+		// Records routes (Protected)
+		records := api.Group("/records")
+		records.Use(middleware.AuthMiddleware(cfg.JWTSecret))
+		{
+			// Viewer and above can list
+			records.GET("", middleware.RoleMiddleware("VIEWER", "ANALYST", "ADMIN"), cfg.RecordHandler.ListRecords)
+			
+			// Analyst and Admin can create/delete
+			records.POST("", middleware.RoleMiddleware("ANALYST", "ADMIN"), cfg.RecordHandler.CreateRecord)
+			records.DELETE("/:id", middleware.RoleMiddleware("ADMIN"), cfg.RecordHandler.DeleteRecord)
 		}
 
 		// Example protected route for testing roles

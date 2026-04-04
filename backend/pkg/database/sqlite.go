@@ -14,7 +14,7 @@ func InitSQLite(dbPath string) (*gorm.DB, error) {
 	}
 
 	// Auto-Migrate the entities
-	err = db.AutoMigrate(&domain.User{})
+	err = db.AutoMigrate(&domain.User{}, &domain.Record{})
 	if err != nil {
 		return nil, err
 	}
