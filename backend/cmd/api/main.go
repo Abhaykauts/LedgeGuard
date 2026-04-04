@@ -28,18 +28,21 @@ func main() {
 
 	authService := application.NewAuthService(userRepo, cfg.JWTSecret, cfg.TokenDuration)
 	recordService := application.NewRecordService(recordRepo)
+	dashboardService := application.NewDashboardService(recordRepo)
 
 	authHandler := http.NewAuthHandler(authService)
 	recordHandler := http.NewRecordHandler(recordService)
+	dashboardHandler := http.NewDashboardHandler(dashboardService)
 
 	// 4. Seed initial Admin (for testing)
 	seedAdmin(userRepo)
 
 	// 5. Setup Router
 	routerCfg := http.RouterConfig{
-		AuthHandler:   authHandler,
-		RecordHandler: recordHandler,
-		JWTSecret:     cfg.JWTSecret,
+		AuthHandler:      authHandler,
+		RecordHandler:    recordHandler,
+		DashboardHandler: dashboardHandler,
+		JWTSecret:        cfg.JWTSecret,
 	}
 	r := http.NewRouter(routerCfg)
 
