@@ -1,0 +1,219 @@
+definitions:
+  application.AuthResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      user:
+        $ref: '#/definitions/domain.User'
+    type: object
+  application.DashboardSummary:
+    properties:
+      category_totals:
+        additionalProperties:
+          format: float64
+          type: number
+        type: object
+      net_balance:
+        type: number
+      total_expenses:
+        type: number
+      total_income:
+        type: number
+    type: object
+  domain.Record:
+    properties:
+      amount:
+        type: number
+      category:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: integer
+      date:
+        type: string
+      id:
+        type: integer
+      note:
+        type: string
+      type:
+        $ref: '#/definitions/domain.RecordType'
+      updated_at:
+        type: string
+    type: object
+  domain.RecordType:
+    enum:
+    - INCOME
+    - EXPENSE
+    type: string
+    x-enum-varnames:
+    - TypeIncome
+    - TypeExpense
+  domain.Role:
+    enum:
+    - VIEWER
+    - ANALYST
+    - ADMIN
+    type: string
+    x-enum-varnames:
+    - RoleViewer
+    - RoleAnalyst
+    - RoleAdmin
+  domain.User:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      role:
+        $ref: '#/definitions/domain.Role'
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  http.loginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  http.refreshRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return tokens
+      parameters:
+      - description: Login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/http.loginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/application.AuthResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login user
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Use refresh token to get a new access token
+      parameters:
+      - description: Refresh request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/http.refreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/application.AuthResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Refresh access token
+      tags:
+      - auth
+  /dashboard/summary:
+    get:
+      description: Get total income, expenses, and category-wise totals
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/application.DashboardSummary'
+      security:
+      - BearerAuth: []
+      summary: Get dashboard summary
+      tags:
+      - dashboard
+  /records:
+    get:
+      description: Get all records with optional filters
+      parameters:
+      - description: Filter by type (INCOME/EXPENSE)
+        in: query
+        name: type
+        type: string
+      - description: Filter by category
+        in: query
+        name: category
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Record'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List financial records
+      tags:
+      - records
+    post:
+      consumes:
+      - application/json
+      description: Add a new income or expense entry
+      parameters:
+      - description: Record object
+        in: body
+        name: record
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Record'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Record'
+      security:
+      - BearerAuth: []
+      summary: Create a financial record
+      tags:
+      - records
+swagger: "2.0"

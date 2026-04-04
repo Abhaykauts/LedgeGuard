@@ -7,9 +7,10 @@ import (
 
 // RouterConfig contains dependencies for the router
 type RouterConfig struct {
-	AuthHandler   *AuthHandler
-	RecordHandler *RecordHandler
-	JWTSecret     string
+	AuthHandler      *AuthHandler
+	RecordHandler    *RecordHandler
+	DashboardHandler *DashboardHandler
+	JWTSecret        string
 }
 
 // NewRouter sets up the API routes
@@ -36,6 +37,13 @@ func NewRouter(cfg RouterConfig) *gin.Engine {
 			// Analyst and Admin can create/delete
 			records.POST("", middleware.RoleMiddleware("ANALYST", "ADMIN"), cfg.RecordHandler.CreateRecord)
 			records.DELETE("/:id", middleware.RoleMiddleware("ADMIN"), cfg.RecordHandler.DeleteRecord)
+		}
+
+		// Dashboard routes (Protected)
+		dashboard := api.Group("/dashboard")
+		dashboard.Use(middleware.AuthMiddleware(cfg.JWTSecret))
+		{
+			dashboard.GET("/summary", middleware.RoleMiddleware("VIEWER", "ANALYST", "ADMIN"), cfg.DashboardHandler.GetSummary)
 		}
 
 		// Example protected route for testing roles

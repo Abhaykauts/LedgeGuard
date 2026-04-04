@@ -32,4 +32,7 @@ func InitializeScenario(sc *godog.ScenarioContext) {
 
 	recordCtx := newRecordTestContext()
 	recordCtx.InitializeScenario(sc)
+
+	dashboardCtx := newDashboardTestContext()
+	dashboardCtx.InitializeScenario(sc)
 }
