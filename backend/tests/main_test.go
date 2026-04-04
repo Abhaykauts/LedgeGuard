@@ -29,4 +29,7 @@ func TestMain(m *testing.M) {
 func InitializeScenario(sc *godog.ScenarioContext) {
 	authCtx := newAuthTestContext()
 	authCtx.InitializeScenario(sc)
+
+	recordCtx := newRecordTestContext()
+	recordCtx.InitializeScenario(sc)
 }
