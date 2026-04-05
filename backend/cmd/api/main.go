@@ -52,6 +52,7 @@ func main() {
 	authHandler := http.NewAuthHandler(authService)
 	recordHandler := http.NewRecordHandler(recordService)
 	dashboardHandler := http.NewDashboardHandler(dashboardService)
+	userHandler := http.NewUserHandler(userRepo)
 
 	// 4. Seed initial Admin (for testing)
 	seedAdmin(userRepo)
@@ -61,6 +62,7 @@ func main() {
 		AuthHandler:      authHandler,
 		RecordHandler:    recordHandler,
 		DashboardHandler: dashboardHandler,
+		UserHandler:      userHandler,
 		JWTSecret:        cfg.JWTSecret,
 	}
 	r := http.NewRouter(routerCfg)

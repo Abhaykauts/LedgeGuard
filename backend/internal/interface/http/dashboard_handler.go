@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Abhaykauts/LedgeGuard/backend/internal/application"
+	"github.com/Abhaykauts/LedgeGuard/backend/pkg/errors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,11 +23,12 @@ func NewDashboardHandler(service application.DashboardServiceInterface) *Dashboa
 // @Security BearerAuth
 // @Produce json
 // @Success 200 {object} application.DashboardSummary
+// @Failure 500 {object} errors.AppError
 // @Router /dashboard/summary [get]
 func (h *DashboardHandler) GetSummary(c *gin.Context) {
 	summary, err := h.service.GetSummary()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		errors.SendInternalError(c, "failed to get dashboard summary")
 		return
 	}
 

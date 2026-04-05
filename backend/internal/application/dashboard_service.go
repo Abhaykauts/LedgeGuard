@@ -14,13 +14,16 @@ func NewDashboardService(repo domain.RecordRepository) DashboardServiceInterface
 }
 
 func (s *dashboardService) GetSummary() (*DashboardSummary, error) {
-	records, err := s.recordRepo.List(domain.RecordFilter{})
+	// 1. Fetch ALL records for calculations (considering large datasets, this would be optimized)
+	records, err := s.recordRepo.List(domain.RecordFilter{Page: 1, PageSize: 1000})
 	if err != nil {
 		return nil, err
 	}
 
 	summary := &DashboardSummary{
 		CategoryTotals: make(map[string]float64),
+		MonthlyTrends:  make(map[string]float64),
+		RecentActivity: make([]domain.Record, 0),
 	}
 
 	for _, rec := range records {
@@ -31,7 +34,19 @@ func (s *dashboardService) GetSummary() (*DashboardSummary, error) {
 		}
 
 		summary.CategoryTotals[rec.Category] += rec.Amount
+
+		// Monthly Trend Calculation (Format: YYYY-MM)
+		monthKey := rec.Date.Format("2006-01")
+		if rec.Type == domain.TypeIncome {
+			summary.MonthlyTrends[monthKey] += rec.Amount
+		} else {
+			summary.MonthlyTrends[monthKey] -= rec.Amount
+		}
 	}
+
+	// 2. Fetch Recent Activity (explicitly use pagination for latest 5)
+	recentFilter := domain.RecordFilter{Page: 1, PageSize: 5}
+	summary.RecentActivity, _ = s.recordRepo.List(recentFilter)
 
 	summary.NetBalance = summary.TotalIncome - summary.TotalExpenses
 
