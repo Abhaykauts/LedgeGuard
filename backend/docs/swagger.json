@@ -18,7 +18,7 @@
     "host": "localhost:8080",
     "basePath": "/api",
     "paths": {
-        "/api/auth/login": {
+        "/auth/login": {
             "post": {
                 "description": "Authenticate user and return tokens",
                 "consumes": [
@@ -61,7 +61,7 @@
                 }
             }
         },
-        "/api/auth/refresh": {
+        "/auth/refresh": {
             "post": {
                 "description": "Use refresh token to get a new access token",
                 "consumes": [
@@ -104,7 +104,7 @@
                 }
             }
         },
-        "/api/dashboard/summary": {
+        "/dashboard/summary": {
             "get": {
                 "security": [
                     {
@@ -129,7 +129,7 @@
                 }
             }
         },
-        "/api/records": {
+        "/records": {
             "get": {
                 "security": [
                     {

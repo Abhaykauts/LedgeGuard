@@ -22,7 +22,7 @@ func NewDashboardHandler(service application.DashboardServiceInterface) *Dashboa
 // @Security BearerAuth
 // @Produce json
 // @Success 200 {object} application.DashboardSummary
-// @Router /api/dashboard/summary [get]
+// @Router /dashboard/summary [get]
 func (h *DashboardHandler) GetSummary(c *gin.Context) {
 	summary, err := h.service.GetSummary()
 	if err != nil {

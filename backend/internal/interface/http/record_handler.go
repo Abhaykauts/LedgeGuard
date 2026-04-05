@@ -26,7 +26,7 @@ func NewRecordHandler(service application.RecordServiceInterface) *RecordHandler
 // @Produce json
 // @Param record body domain.Record true "Record object"
 // @Success 201 {object} domain.Record
-// @Router /api/records [post]
+// @Router /records [post]
 func (h *RecordHandler) CreateRecord(c *gin.Context) {
 	var record domain.Record
 	if err := c.ShouldBindJSON(&record); err != nil {
@@ -54,7 +54,7 @@ func (h *RecordHandler) CreateRecord(c *gin.Context) {
 // @Param type query string false "Filter by type (INCOME/EXPENSE)"
 // @Param category query string false "Filter by category"
 // @Success 200 {array} domain.Record
-// @Router /api/records [get]
+// @Router /records [get]
 func (h *RecordHandler) ListRecords(c *gin.Context) {
 	var filter domain.RecordFilter
 	
