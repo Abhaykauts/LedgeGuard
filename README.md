@@ -1,6 +1,6 @@
 # LedgeGuard Finance Backend
 
-LedgeGuard is a production-grade financial data processing and access control backend built with Go. It demonstrates **Domain-Driven Design (DDD)**, **Ginkgo/Gomega Unit Testing**, **Gherkin Functional Testing**, and strict **Role-Based Access Control (RBAC)**.
+LedgeGuard is a production-grade financial data processing and access control backend built with Go. It demonstrates **Domain-Driven Design (DDD)**, **Technical Excellence** (Ginkgo/Gomega/Godog), and strict **Role-Based Access Control (RBAC)**.
 
 ---
 
@@ -41,7 +41,7 @@ graph TD
 ```
 
 ### Key Design Decisison: Why DDD?
-We chose a DDD-inspired structure to ensure the business logic (Financial Records and Analytics) remains independent of the technical implementation (SQLite/Gin). This makes the system resilient to framework changes and perfectly suited for complex financial rules.
+We chose a DDD-inspired structure to ensure the business logic (Financial Records and Analytics) remains independent of the technical implementation. This makes the system resilient to framework changes and perfectly suited for complex financial rules.
 
 ---
 
@@ -61,14 +61,15 @@ LedgeGuard implements a robust security model using **JWT (JSON Web Tokens)** wi
 
 ---
 
-## 🚀 Step-by-Step API Guide (Copy-Paste JSON)
+## 🚀 Comprehensive API Dictionary (Copy-Paste JSON)
 
 Use the [Interactive Swagger UI](http://localhost:8080/swagger/index.html) to test these flows.
 
-### 1. Authentication (Login)
+### 1. Authentication & Identity
+
+#### 1.1 Login (Get Tokens)
 **POST** `/api/auth/login`
-- **Description**: Authenticate and receive your JWT tokens.
-- **Payload**:
+- **Request**:
   ```json
   {
     "username": "admin",
@@ -76,68 +77,111 @@ Use the [Interactive Swagger UI](http://localhost:8080/swagger/index.html) to te
   }
   ```
 
-### 2. User Management (Admin Only)
-**POST** `/api/users`
-- **Description**: Highly controlled administrative user creation.
-- **Payload**:
+#### 1.2 Token Refresh
+**POST** `/api/auth/refresh`
+- **Request**:
   ```json
   {
-    "username": "analyst_sarah",
+    "refresh_token": "eyJhbGc..."
+  }
+  ```
+
+---
+
+### 2. User Management (Admin Only)
+
+#### 2.1 Create User
+**POST** `/api/users`
+- **Request**:
+  ```json
+  {
+    "username": "sarah_analyst",
     "role": "ANALYST",
     "is_active": true
   }
   ```
 
-### 3. Financial Records (Create)
-**POST** `/api/records`
-- **Description**: Create income or expense records with categories.
-- **Payload (Income)**:
-  ```json
-  {
-    "type": "INCOME",
-    "amount": 5000,
-    "category": "Salary",
-    "note": "Monthly payment"
-  }
-  ```
-- **Payload (Expense)**:
-  ```json
-  {
-    "type": "EXPENSE",
-    "amount": 50,
-    "category": "Food",
-    "note": "Coffee with client"
-  }
-  ```
-
-### 4. Advanced Listing (Search & Pagination)
-**GET** `/api/records?page=1&page_size=10&search=coffee`
-- **Description**: Paginated record retrieval with keyword-based search in notes.
-- **Success Response**:
+#### 2.2 List All Users
+**GET** `/api/users`
+- **Response (200 OK)**:
   ```json
   [
-    {
-      "id": 2,
-      "type": "EXPENSE",
-      "amount": 50,
-      "category": "Food",
-      "note": "Coffee with client"
-    }
+    { "id": 1, "username": "admin", "role": "ADMIN", "is_active": true }
   ]
   ```
 
-### 5. Analytical Depth (Dashboard)
-**GET** `/api/dashboard/summary`
-- **Description**: High-level financial overview including **ISO-8601 Weekly and Monthly trends**.
-- **Sample Metrics**:
+#### 2.3 Update User
+**PUT** `/api/users/2`
+- **Request (Change Role)**:
   ```json
   {
-    "total_income": 5000,
-    "total_expenses": 50,
-    "net_balance": 4950,
-    "weekly_trends": {
-      "2026-W14": 4950
-    }
+    "username": "sarah_analyst",
+    "role": "ADMIN",
+    "is_active": true
+  }
+  ```
+
+#### 2.4 Delete User (Soft Delete)
+**DELETE** `/api/users/2`
+- **Response**: `204 No Content`
+
+---
+
+### 3. Financial Records (CRUD & Search)
+
+#### 3.1 Create Record
+**POST** `/api/records`
+- **Request (Income)**:
+  ```json
+  {
+    "type": "INCOME",
+    "amount": 2500,
+    "category": "Consulting",
+    "note": "Quarterly payment"
+  }
+  ```
+
+#### 3.2 List Records (Filter & Search)
+**GET** `/api/records?type=INCOME&search=payment`
+- **Response (200 OK)**:
+  ```json
+  [
+    { "id": 1, "amount": 2500, "category": "Consulting", "note": "Quarterly payment" }
+  ]
+  ```
+
+#### 3.3 Get Single Record
+**GET** `/api/records/1`
+- **Response (200 OK)**:
+  ```json
+  { "id": 1, "amount": 2500, "category": "Consulting", "note": "Quarterly payment" }
+  ```
+
+#### 3.4 Update Record
+**PUT** `/api/records/1`
+- **Request**:
+  ```json
+  { "type": "INCOME", "amount": 3000, "category": "Consulting", "note": "Updated amount" }
+  ```
+
+#### 3.5 Delete Record
+**DELETE** `/api/records/1`
+- **Response**: `204 No Content`
+
+---
+
+### 4. Analytics & Insights
+
+#### 4.1 Dashboard Summary
+**GET** `/api/dashboard/summary`
+- **Response (200 OK)**:
+  ```json
+  {
+    "total_income": 3000.0,
+    "total_expenses": 0.0,
+    "net_balance": 3000.0,
+    "weekly_trends": { "2026-W14": 3000.0 },
+    "monthly_trends": { "2026-April": 3000.0 }
   }
   ```
 
@@ -145,19 +189,17 @@ Use the [Interactive Swagger UI](http://localhost:8080/swagger/index.html) to te
 
 ## 🧪 Testing Strategy (Technical Excellence)
 
-LedgeGuard employs a multi-tiered testing strategy ensuring 100% logic coverage.
+LedgeGuard is verified by a multi-tiered test architecture.
 
 ### 1. Ginkgo/Gomega Unit Tests
-Comprehensive logic verification for Application Services.
+Logic verification for Services (Aggregation, Search, Validation).
 ```bash
-# Run all unit tests
 go test -v ./backend/internal/application/...
 ```
 
 ### 2. Gherkin (Godog) Functional Tests
-End-to-end BDD scenarios covering Auth, Records, and Dashboard.
+End-to-end BDD scenarios covering RBAC and Pagination.
 ```bash
-# Run all functional tests
 go test -v ./backend/tests/...
 ```
 
