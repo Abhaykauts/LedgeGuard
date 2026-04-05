@@ -1,8 +1,11 @@
 package http
 
 import (
+	_ "github.com/Abhaykauts/LedgeGuard/backend/docs"
 	"github.com/Abhaykauts/LedgeGuard/backend/internal/interface/http/middleware"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // RouterConfig contains dependencies for the router
@@ -16,6 +19,9 @@ type RouterConfig struct {
 // NewRouter sets up the API routes
 func NewRouter(cfg RouterConfig) *gin.Engine {
 	r := gin.Default()
+
+	// Swagger route
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Base API group
 	api := r.Group("/api")
