@@ -1,3 +1,4 @@
+basePath: /api
 definitions:
   application.AuthResponse:
     properties:
@@ -93,8 +94,19 @@ definitions:
     required:
     - refresh_token
     type: object
+host: localhost:8080
 info:
-  contact: {}
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Production-grade Finance Backend with DDD and RBAC.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: LedgeGuard API
+  version: "1.0"
 paths:
   /api/auth/login:
     post:
@@ -216,4 +228,9 @@ paths:
       summary: Create a financial record
       tags:
       - records
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
