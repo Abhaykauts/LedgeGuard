@@ -91,10 +91,19 @@ func (h *RecordHandler) ListRecords(c *gin.Context) {
 // @Param record body domain.Record true "Record object"
 // @Success 200 {object} domain.Record
 // @Failure 400 {object} errors.AppError
+// @Failure 404 {object} errors.AppError
 // @Failure 500 {object} errors.AppError
 // @Router /records/{id} [put]
 func (h *RecordHandler) UpdateRecord(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
+
+	// Check if record exists
+	existing, err := h.service.GetRecord(uint(id))
+	if err != nil || existing == nil {
+		errors.SendNotFound(c, "record not found")
+		return
+	}
+
 	var record domain.Record
 	if err := c.ShouldBindJSON(&record); err != nil {
 		errors.SendBadRequest(c, "invalid input data")
@@ -117,10 +126,19 @@ func (h *RecordHandler) UpdateRecord(c *gin.Context) {
 // @Security BearerAuth
 // @Param id path int true "Record ID"
 // @Success 204 "No Content"
+// @Failure 404 {object} errors.AppError
 // @Failure 500 {object} errors.AppError
 // @Router /records/{id} [delete]
 func (h *RecordHandler) DeleteRecord(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
+
+	// Check existence before delete
+	existing, err := h.service.GetRecord(uint(id))
+	if err != nil || existing == nil {
+		errors.SendNotFound(c, "record not found")
+		return
+	}
+
 	if err := h.service.DeleteRecord(uint(id)); err != nil {
 		errors.SendInternalError(c, "failed to delete record")
 		return

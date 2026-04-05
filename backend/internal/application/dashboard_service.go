@@ -1,6 +1,8 @@
 package application
 
 import (
+	"fmt"
+
 	"github.com/Abhaykauts/LedgeGuard/backend/internal/domain"
 )
 
@@ -23,6 +25,7 @@ func (s *dashboardService) GetSummary() (*DashboardSummary, error) {
 	summary := &DashboardSummary{
 		CategoryTotals: make(map[string]float64),
 		MonthlyTrends:  make(map[string]float64),
+		WeeklyTrends:   make(map[string]float64),
 		RecentActivity: make([]domain.Record, 0),
 	}
 
@@ -35,12 +38,21 @@ func (s *dashboardService) GetSummary() (*DashboardSummary, error) {
 
 		summary.CategoryTotals[rec.Category] += rec.Amount
 
-		// Monthly Trend Calculation (Format: YYYY-MM)
+		// Monthly Trend (YYYY-MM)
 		monthKey := rec.Date.Format("2006-01")
 		if rec.Type == domain.TypeIncome {
 			summary.MonthlyTrends[monthKey] += rec.Amount
 		} else {
 			summary.MonthlyTrends[monthKey] -= rec.Amount
+		}
+
+		// Weekly Trend (ISO Week: YYYY-Www)
+		year, week := rec.Date.ISOWeek()
+		weekKey := fmt.Sprintf("%d-W%02d", year, week)
+		if rec.Type == domain.TypeIncome {
+			summary.WeeklyTrends[weekKey] += rec.Amount
+		} else {
+			summary.WeeklyTrends[weekKey] -= rec.Amount
 		}
 	}
 

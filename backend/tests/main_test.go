@@ -8,8 +8,8 @@ import (
 	"github.com/cucumber/godog/colors"
 )
 
-func TestMain(m *testing.M) {
-	status := godog.TestSuite{
+func TestFeatures(t *testing.T) {
+	suite := godog.TestSuite{
 		Name:                "LedgeGuard Functional Tests",
 		ScenarioInitializer: InitializeScenario,
 		Options: &godog.Options{
@@ -17,22 +17,14 @@ func TestMain(m *testing.M) {
 			Paths:  []string{"../features"},
 			Output: colors.Colored(os.Stdout),
 		},
-	}.Run()
-
-	if status != 0 {
-		os.Exit(status)
 	}
 
-	os.Exit(m.Run())
+	if suite.Run() != 0 {
+		t.Fatal("non-zero status returned, failed to run feature tests")
+	}
 }
 
 func InitializeScenario(sc *godog.ScenarioContext) {
-	authCtx := newAuthTestContext()
-	authCtx.InitializeScenario(sc)
-
-	recordCtx := newRecordTestContext()
-	recordCtx.InitializeScenario(sc)
-
-	dashboardCtx := newDashboardTestContext()
-	dashboardCtx.InitializeScenario(sc)
+	sharedCtx := newSharedTestContext()
+	sharedCtx.InitializeScenario(sc)
 }

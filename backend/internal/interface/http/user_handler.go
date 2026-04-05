@@ -70,10 +70,19 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 // @Param user body domain.User true "User object"
 // @Success 200 {object} domain.User
 // @Failure 400 {object} errors.AppError
+// @Failure 404 {object} errors.AppError
 // @Failure 500 {object} errors.AppError
 // @Router /users/{id} [put]
 func (h *UserHandler) UpdateUser(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
+
+	// Check existence
+	existing, err := h.repo.GetByID(uint(id))
+	if err != nil || existing == nil {
+		errors.SendNotFound(c, "user not found")
+		return
+	}
+
 	var user domain.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		errors.SendBadRequest(c, "invalid user data", err.Error())
@@ -96,10 +105,19 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 // @Produce json
 // @Param id path int true "User ID"
 // @Success 204 "No Content"
+// @Failure 404 {object} errors.AppError
 // @Failure 500 {object} errors.AppError
 // @Router /users/{id} [delete]
 func (h *UserHandler) DeleteUser(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
+
+	// Check existence before delete
+	existing, err := h.repo.GetByID(uint(id))
+	if err != nil || existing == nil {
+		errors.SendNotFound(c, "user not found")
+		return
+	}
+
 	if err := h.repo.Delete(uint(id)); err != nil {
 		errors.SendInternalError(c, "failed to delete user")
 		return

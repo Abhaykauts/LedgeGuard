@@ -23,3 +23,17 @@ Feature: Financial Records Management
     When I list records filtered by type "INCOME"
     Then I should see 1 record
     And the record amount should be 2000
+
+  Scenario: List records with keyword search
+    Given I am an authenticated "ADMIN"
+    And a record exists with note "Monthly rent payment"
+    And a record exists with note "Coffee with client"
+    When I search records with keyword "rent"
+    Then I should see 1 record
+    And the record note should be "Monthly rent payment"
+
+  Scenario: List records with pagination
+    Given I am an authenticated "ADMIN"
+    And 15 records exist in the system
+    When I request records with page 2 and page_size 10
+    Then I should see 5 records

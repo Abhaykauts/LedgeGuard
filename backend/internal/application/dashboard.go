@@ -10,6 +10,7 @@ type DashboardSummary struct {
 	CategoryTotals map[string]float64 `json:"category_totals"`
 	RecentActivity []domain.Record    `json:"recent_activity"`
 	MonthlyTrends  map[string]float64 `json:"monthly_trends"`
+	WeeklyTrends   map[string]float64 `json:"weekly_trends"`
 }
 
 // DashboardServiceInterface defines the analytics use cases
