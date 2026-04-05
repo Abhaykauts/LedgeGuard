@@ -45,4 +45,5 @@ type RecordFilter struct {
 	Category  *string     `form:"category"`
 	Page      int         `form:"page,default=1"`
 	PageSize  int         `form:"page_size,default=10"`
+	Search    string      `form:"search"`
 }

@@ -50,6 +50,9 @@ func (r *recordRepository) List(filter domain.RecordFilter) ([]domain.Record, er
 	if filter.Category != nil {
 		query = query.Where("category = ?", filter.Category)
 	}
+	if filter.Search != "" {
+		query = query.Where("note LIKE ?", "%"+filter.Search+"%")
+	}
 
 	// Pagination
 	offset := (filter.Page - 1) * filter.PageSize
