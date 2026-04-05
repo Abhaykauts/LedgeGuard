@@ -33,7 +33,7 @@ type refreshRequest struct {
 // @Param request body loginRequest true "Login request"
 // @Success 200 {object} application.AuthResponse
 // @Failure 401 {object} map[string]string
-// @Router /auth/login [post]
+// @Router /api/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req loginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -59,7 +59,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 // @Param request body refreshRequest true "Refresh request"
 // @Success 200 {object} application.AuthResponse
 // @Failure 401 {object} map[string]string
-// @Router /auth/refresh [post]
+// @Router /api/auth/refresh [post]
 func (h *AuthHandler) Refresh(c *gin.Context) {
 	var req refreshRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

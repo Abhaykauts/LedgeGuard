@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/login": {
+        "/api/auth/login": {
             "post": {
                 "description": "Authenticate user and return tokens",
                 "consumes": [
@@ -58,7 +58,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/refresh": {
+        "/api/auth/refresh": {
             "post": {
                 "description": "Use refresh token to get a new access token",
                 "consumes": [
@@ -101,7 +101,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/dashboard/summary": {
+        "/api/dashboard/summary": {
             "get": {
                 "security": [
                     {
@@ -126,7 +126,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/records": {
+        "/api/records": {
             "get": {
                 "security": [
                     {

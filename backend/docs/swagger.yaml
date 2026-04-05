@@ -96,7 +96,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /auth/login:
+  /api/auth/login:
     post:
       consumes:
       - application/json
@@ -124,7 +124,7 @@ paths:
       summary: Login user
       tags:
       - auth
-  /auth/refresh:
+  /api/auth/refresh:
     post:
       consumes:
       - application/json
@@ -152,7 +152,7 @@ paths:
       summary: Refresh access token
       tags:
       - auth
-  /dashboard/summary:
+  /api/dashboard/summary:
     get:
       description: Get total income, expenses, and category-wise totals
       produces:
@@ -167,7 +167,7 @@ paths:
       summary: Get dashboard summary
       tags:
       - dashboard
-  /records:
+  /api/records:
     get:
       description: Get all records with optional filters
       parameters:

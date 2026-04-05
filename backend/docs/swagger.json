@@ -4,7 +4,7 @@
         "contact": {}
     },
     "paths": {
-        "/auth/login": {
+        "/api/auth/login": {
             "post": {
                 "description": "Authenticate user and return tokens",
                 "consumes": [
@@ -47,7 +47,7 @@
                 }
             }
         },
-        "/auth/refresh": {
+        "/api/auth/refresh": {
             "post": {
                 "description": "Use refresh token to get a new access token",
                 "consumes": [
@@ -90,7 +90,7 @@
                 }
             }
         },
-        "/dashboard/summary": {
+        "/api/dashboard/summary": {
             "get": {
                 "security": [
                     {
@@ -115,7 +115,7 @@
                 }
             }
         },
-        "/records": {
+        "/api/records": {
             "get": {
                 "security": [
                     {
