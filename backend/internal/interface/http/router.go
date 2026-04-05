@@ -13,6 +13,7 @@ type RouterConfig struct {
 	AuthHandler      *AuthHandler
 	RecordHandler    *RecordHandler
 	DashboardHandler *DashboardHandler
+	UserHandler      *UserHandler
 	JWTSecret        string
 }
 
@@ -33,15 +34,26 @@ func NewRouter(cfg RouterConfig) *gin.Engine {
 			authGroup.POST("/refresh", cfg.AuthHandler.Refresh)
 		}
 
+		// User routes (Admin Only)
+		users := api.Group("/users")
+		users.Use(middleware.AuthMiddleware(cfg.JWTSecret))
+		{
+			users.GET("", middleware.RoleMiddleware("ADMIN"), cfg.UserHandler.ListUsers)
+			users.POST("", middleware.RoleMiddleware("ADMIN"), cfg.UserHandler.CreateUser)
+			users.PUT("/:id", middleware.RoleMiddleware("ADMIN"), cfg.UserHandler.UpdateUser)
+			users.DELETE("/:id", middleware.RoleMiddleware("ADMIN"), cfg.UserHandler.DeleteUser)
+		}
+
 		// Records routes (Protected)
 		records := api.Group("/records")
 		records.Use(middleware.AuthMiddleware(cfg.JWTSecret))
 		{
 			// Viewer and above can list
 			records.GET("", middleware.RoleMiddleware("VIEWER", "ANALYST", "ADMIN"), cfg.RecordHandler.ListRecords)
-			
-			// Analyst and Admin can create/delete
-			records.POST("", middleware.RoleMiddleware("ANALYST", "ADMIN"), cfg.RecordHandler.CreateRecord)
+
+			// Admin can create/update/delete
+			records.POST("", middleware.RoleMiddleware("ADMIN"), cfg.RecordHandler.CreateRecord)
+			records.PUT("/:id", middleware.RoleMiddleware("ADMIN"), cfg.RecordHandler.UpdateRecord)
 			records.DELETE("/:id", middleware.RoleMiddleware("ADMIN"), cfg.RecordHandler.DeleteRecord)
 		}
 

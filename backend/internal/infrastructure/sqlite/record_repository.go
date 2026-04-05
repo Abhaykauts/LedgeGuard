@@ -51,7 +51,9 @@ func (r *recordRepository) List(filter domain.RecordFilter) ([]domain.Record, er
 		query = query.Where("category = ?", filter.Category)
 	}
 
-	if err := query.Find(&records).Error; err != nil {
+	// Pagination
+	offset := (filter.Page - 1) * filter.PageSize
+	if err := query.Offset(offset).Limit(filter.PageSize).Find(&records).Error; err != nil {
 		return nil, err
 	}
 	return records, nil

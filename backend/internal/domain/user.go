@@ -1,6 +1,10 @@
 package domain
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 // Role represents the user access level
 type Role string
@@ -13,13 +17,14 @@ const (
 
 // User represents a system user
 type User struct {
-	ID           uint      `json:"id"`
-	Username     string    `json:"username"`
-	PasswordHash string    `json:"-"`
-	Role         Role      `json:"role"`
-	IsActive     bool      `json:"is_active"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	ID           uint           `gorm:"primaryKey" json:"id"`
+	Username     string         `gorm:"uniqueIndex;not null" json:"username"`
+	PasswordHash string         `gorm:"not null" json:"-"`
+	Role         Role           `gorm:"not null" json:"role"`
+	IsActive     bool           `gorm:"default:true" json:"is_active"`
+	CreatedAt    time.Time      `json:"created_at"`
+	UpdatedAt    time.Time      `json:"updated_at"`
+	DeletedAt    gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 // UserRepository defines the persistence contract

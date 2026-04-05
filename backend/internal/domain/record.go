@@ -39,8 +39,10 @@ type RecordRepository interface {
 
 // RecordFilter provides criteria for listing records
 type RecordFilter struct {
-	StartDate *time.Time
-	EndDate   *time.Time
-	Type      *RecordType
-	Category  *string
+	StartDate *time.Time  `form:"start_date" time_format:"2006-01-02"`
+	EndDate   *time.Time  `form:"end_date" time_format:"2006-01-02"`
+	Type      *RecordType `form:"type"`
+	Category  *string     `form:"category"`
+	Page      int         `form:"page,default=1"`
+	PageSize  int         `form:"page_size,default=10"`
 }
