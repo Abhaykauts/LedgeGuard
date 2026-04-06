@@ -109,6 +109,32 @@ cd backend
 go run cmd/api/main.go
 ```
 
+---
+
+## ☁️ Deploy to Railway (Production)
+
+This project is optimized for deployment on [Railway](https://railway.app) using their native Go support and persistent volumes.
+
+### 1. Create a New Project
+- Select **Deploy from GitHub repo**.
+- Select your repository.
+- Set **Root Directory** to `backend`.
+
+### 2. Configure Persistent Storage (CRITICAL)
+Railway's filesystem is ephemeral by default. To persist your SQLite database:
+1. Go to **Settings** -> **Volumes**.
+2. Click **Add Volume**.
+3. Set **Mount Path** to `/app/data`.
+
+### 3. Environment Variables
+Add these variables in the **Variables** tab:
+- `DB_PATH`: `/app/data/ledgeguard.db`
+- `PORT`: `8080`
+- `JWT_SECRET`: `your-random-secure-secret`
+- `JWT_REFRESH_SECRET`: `your-random-refresh-secret`
+
+---
+
 ### 3. Access Documentation
 Once the server is running, visit:
 - **Swagger UI**: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
