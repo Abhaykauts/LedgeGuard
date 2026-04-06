@@ -18,9 +18,9 @@ const (
 // User represents a system user
 type User struct {
 	ID           uint           `gorm:"primaryKey" json:"id"`
-	Username     string         `gorm:"uniqueIndex;not null" json:"username"`
+	Username     string         `gorm:"uniqueIndex;not null" json:"username" binding:"required,alphanum,min=3,max=20"`
 	PasswordHash string         `gorm:"not null" json:"-"`
-	Role         Role           `gorm:"not null" json:"role"`
+	Role         Role           `gorm:"not null" json:"role" binding:"required,oneof=VIEWER ANALYST ADMIN"`
 	IsActive     bool           `gorm:"default:true" json:"is_active"`
 	CreatedAt    time.Time      `json:"created_at"`
 	UpdatedAt    time.Time      `json:"updated_at"`
