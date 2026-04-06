@@ -17,8 +17,8 @@ func NewAuthHandler(service application.AuthServiceInterface) *AuthHandler {
 }
 
 type loginRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username string `json:"username" binding:"required,alphanum,min=3,max=20"`
+	Password string `json:"password" binding:"required,min=8"`
 }
 
 type refreshRequest struct {

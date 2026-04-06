@@ -17,10 +17,10 @@ const (
 // Record represents a single financial entry
 type Record struct {
 	ID          uint           `gorm:"primaryKey" json:"id"`
-	Amount      float64        `json:"amount"`
-	Type        RecordType     `json:"type"`
-	Category    string         `json:"category"`
-	Date        time.Time      `json:"date"`
+	Amount      float64        `json:"amount" binding:"required,gt=0"`
+	Type        RecordType     `json:"type" binding:"required,oneof=INCOME EXPENSE"`
+	Category    string         `json:"category" binding:"required,min=2,max=50"`
+	Date        time.Time      `json:"date" binding:"required"`
 	Note        string         `json:"note"`
 	CreatedBy   uint           `json:"created_by"`
 	CreatedAt   time.Time      `json:"created_at"`
@@ -43,7 +43,7 @@ type RecordFilter struct {
 	EndDate   *time.Time  `form:"end_date" time_format:"2006-01-02"`
 	Type      *RecordType `form:"type"`
 	Category  *string     `form:"category"`
-	Page      int         `form:"page,default=1"`
-	PageSize  int         `form:"page_size,default=10"`
+	Page      int         `form:"page,default=1" binding:"omitempty,min=1"`
+	PageSize  int         `form:"page_size,default=10" binding:"omitempty,min=1,max=100"`
 	Search    string      `form:"search"`
 }

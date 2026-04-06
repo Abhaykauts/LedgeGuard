@@ -58,6 +58,28 @@ LedgeGuard implements a robust security model using **JWT (JSON Web Tokens)** wi
 | Create Records | ❌ | ❌ | ✅ |
 | Update/Delete Records | ❌ | ❌ | ✅ |
 | User Management | ❌ | ❌ | ✅ |
+| Update/Delete Records | ❌ | ❌ | ✅ |
+| User Management | ❌ | ❌ | ✅ |
+
+---
+
+## ✅ Data Integrity & Validation
+
+LedgeGuard enforces strict input validation at the domain level using Gin's validation middleware.
+
+### Validation Rules
+
+- **User**:
+    - `Username`: Alphanumeric, 3-20 characters.
+    - `Role`: Must be one of `ADMIN`, `ANALYST`, or `VIEWER`.
+- **Financial Record**:
+    - `Amount`: Must be a positive number (`> 0`).
+    - `Type`: Must be `INCOME` or `EXPENSE`.
+    - `Category`: 2-50 characters.
+    - `Date`: Required (ISO 8601 format).
+- **Pagination**:
+    - `Page`: Minimum 1.
+    - `PageSize`: 1-100 (Default 10).
 
 ---
 
