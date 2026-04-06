@@ -61,9 +61,39 @@ LedgeGuard implements a robust security model using **JWT (JSON Web Tokens)** wi
 
 ---
 
-## 🚀 Comprehensive API Dictionary (Copy-Paste JSON)
+## 🚀 Quick Start & Installation
 
-Use the [Interactive Swagger UI](http://localhost:8080/swagger/index.html) to test these flows.
+### Prerequisites
+- **Go**: 1.21+ 
+- **Git**: For cloning (optional)
+- **SQLite3**: Driver included (no separate install needed)
+
+### 1. Setup Environment
+Clone the repository and set up your environment variables:
+```bash
+cd backend
+cp .env.example .env
+```
+Edit the `.env` file to set your secrets:
+- `PORT`: Server port (default 8080)
+- `DB_PATH`: Path to SQLite database
+- `JWT_SECRET`: Secret key for JWT signing
+- `TOKEN_DURATION`: JWT token validity (e.g., 15m, 1h)
+
+### 2. Run the Backend
+The server will start at `http://localhost:8080`.
+```bash
+cd backend
+go run cmd/api/main.go
+```
+
+### 3. Access Documentation
+Once the server is running, visit:
+- **Swagger UI**: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
+
+---
+
+## 📖 Comprehensive API Dictionary (Copy-Paste JSON)
 
 ### 1. Authentication & Identity
 
