@@ -4,6 +4,12 @@ LedgeGuard is a production-grade financial data processing and access control ba
 
 ---
 
+## 🌐 Live Demo & Deployment
+The application is live and can be accessed at:
+- **API Documentation (Swagger)**: [https://ledgeguard-production.up.railway.app/swagger/index.html](https://ledgeguard-production.up.railway.app/swagger/index.html)
+
+---
+
 ## 🏗 Architecture Overview
 
 LedgeGuard follows the **Onion Architecture** (Clean Architecture) pattern, ensuring a strict separation of concerns and high testability.
@@ -137,7 +143,14 @@ Add these variables in the **Variables** tab:
 
 ### 3. Access Documentation
 Once the server is running, visit:
-- **Swagger UI**: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
+- **Swagger UI (Local)**: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
+- **Swagger UI (Post-Deployment)**: [https://ledgeguard-production.up.railway.app/swagger/index.html](https://ledgeguard-production.up.railway.app/swagger/index.html)
+
+> [!IMPORTANT]
+> **How to Authorize in Swagger:**
+> 1. Click the **Authorize** button.
+> 2. In the Value field, you **must** prepend your token with the word `Bearer` and a space (e.g., `Bearer eyJhbGc...`).
+> 3. If you do not include the `Bearer ` prefix, the API will reject your requests with a `401 Unauthorized` error.
 
 ---
 
